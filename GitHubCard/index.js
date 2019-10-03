@@ -6,7 +6,6 @@
 // Get my github and append to cardsDiv
 axios.get("https://api.github.com/users/jess-daniel")
 .then(response => {
-  console.log(response);
   const newCard = githubCard(response);
   cardsDiv.appendChild(newCard);
 }) 
@@ -14,30 +13,27 @@ axios.get("https://api.github.com/users/jess-daniel")
   console.log("The data was not returned", error);
 });
 
-// Get all followers and append to cardsDiv
-// function getFollowers() {
-//   followers = [];
-//   axios.get("https://api.github.com/users/jess-daniel/followers")
-//   .then(response => {
-//     response.data.forEach(e => {
-//        followers.push(e);
-//     })
-//     return followers;
-//   })
-// }
-//       console.log(followersArray);
-//     followersArray.forEach(el => {
-//       cardsDiv.appendChild(githubCard(response));
-//       })
-//     })
-//   }) 
-//   .catch(error => {
-//     console.log("The data was not returned", error);
-//   });
-// }
+// Get all followers and add to an array
+function getFollowers() {
+  followers = [];
+  axios.get("https://api.github.com/users/jess-daniel/followers")
+  .then(response => {
+    response.data.forEach(e => {
+       followers.push(e);
+    })
+  })
+  // append followers to DOM
+  .then(function(result) {
+    followers.forEach(e => {
+      axios.get(`https://api.github.com/users/${e.login}`)
+      .then(response => {
+        cardsDiv.appendChild(githubCard(response));
+      })
+    })
+  })
+}
 
-// getFollowers();
-
+getFollowers();
 
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
